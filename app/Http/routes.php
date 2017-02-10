@@ -15,11 +15,13 @@ Route::group(['middleware' => 'init.request', 'prefix' => 'api/t'], function () 
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'web'], function () {
             Route::post('user/login', 'AuthController@authenticate');
-            Route::post('user/register', 'AuthController@register');
+            Route::post('user/signup', 'AuthController@signup');
             Route::group(['middleware' => 'jwt.api.auth'], function () {
                 Route::get('lessons', 'LessonController@index');
-                Route::get('lessons/{id}', 'LessonController@show');
-                Route::post('lessons', 'LessonController@store');
+                Route::get('lesson', 'LessonController@query');
+                Route::post('lesson', 'LessonController@create');
+                Route::put('lesson', 'LessonController@update');
+                Route::delete('lesson', 'LessonController@delete');
             });
         });
     });

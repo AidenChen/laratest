@@ -41,7 +41,7 @@ class AuthController extends BaseController
         ]);
     }
 
-    public function register(Request $request)
+    public function signup(Request $request)
     {
         $newUser = [
             'user_email' => $request->get('user_email'),
