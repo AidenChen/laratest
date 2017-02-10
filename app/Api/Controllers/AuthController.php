@@ -8,13 +8,11 @@
 
 namespace App\Api\Controllers;
 
+use App\Exceptions\ApplicationException;
 use App\models\User;
 use Illuminate\Http\Request;
 use JWTAuth;
-use JWTFactory;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthController extends BaseController
 {
@@ -26,20 +24,21 @@ class AuthController extends BaseController
             'user_email' => $request->get('user_email'),
             'password' => $request->get('user_password')
         ];
-        $customClaims = ['foo' => 'bar', 'baz' => 'bob'];
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials, $customClaims)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+            if (!$token = JWTAuth::attempt($credentials)) {
+                throw new ApplicationException(40002);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            throw new ApplicationException(50001);
         }
 
         // all good so return the token
-        return response()->json(compact('token'));
+        return $this->responseData([
+            'token' => $token
+        ]);
     }
 
     public function register(Request $request)
@@ -52,32 +51,8 @@ class AuthController extends BaseController
         $user = User::create($newUser);
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('token'));
-    }
-
-    public function getAuthenticatedUser()
-    {
-        try {
-
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-
-        } catch (TokenExpiredException $e) {
-
-            return response()->json(['token_expired'], $e->getStatusCode());
-
-        } catch (TokenInvalidException $e) {
-
-            return response()->json(['token_invalid'], $e->getStatusCode());
-
-        } catch (JWTException $e) {
-
-            return response()->json(['token_absent'], $e->getStatusCode());
-
-        }
-
-        // the token is valid and we have found the user via the sub claim
-        return response()->json(compact('user'));
+        return $this->responseData([
+            'token' => $token
+        ]);
     }
 }

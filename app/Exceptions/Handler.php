@@ -47,11 +47,17 @@ class Handler extends ExceptionHandler
 //        }
         switch ($e) {
             case ($e instanceof ModelNotFoundException):
-                return response()->view('errors.503', [], 503);
+                return response()->view('errors.404', [], 404);
                 break;
             case ($e instanceof NotFoundHttpException):
-//                return response()->view('errors.custom', ['exception' => $e]);
-                return response()->view('errors.503', [], 503);
+                return response()->view('errors.404', ['exception' => $e], 404);
+                break;
+            case ($e instanceof ApplicationException):
+                $code = $e->getErrorCode();
+                return response()->json([
+                    'code' => $code,
+                    'msg' => app('error.info')->getErrorMsg($code, request()->headers->get('lang'))
+                ]);
                 break;
             default:
                 return parent::render($request, $e);

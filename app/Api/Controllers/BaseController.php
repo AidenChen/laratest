@@ -9,12 +9,9 @@
 namespace App\Api\Controllers;
 
 use App\Http\Controllers\Controller;
-use Dingo\Api\Routing\Helpers;
 
 class BaseController extends Controller
 {
-    use Helpers;
-
     protected $code = 0;
 
     public function getCode()
@@ -28,10 +25,26 @@ class BaseController extends Controller
         return $this;
     }
 
-    public function responseData($data = [], $options = [])
+    public function responseError($type, $options = [])
     {
-        $data['code'] = $this->getCode();
-        $data['msg'] = app('error.info')->getErrorMsg($data['code']);
-        return response()->json($data);
+        $return = [
+            'code' => $this->getCode(),
+            'msg' => app('error.info')->getErrorMsg($this->getCode(), request()->headers->get('lang'))
+        ];
+
+        if ($type) {
+            $return['notify'] = app('error.info')->getErrorNotify($type, $options, request()->headers->get('lang'));
+        }
+
+        return response()->json($return);
+    }
+
+    public function responseData($input = [])
+    {
+        return response()->json([
+            'code' => $this->getCode(),
+            'msg' => app('error.info')->getErrorMsg($this->getCode(), request()->headers->get('lang')),
+            'data' => $input
+        ]);
     }
 }

@@ -9,9 +9,11 @@
 namespace App\Api\Controllers;
 
 use App\Api\Transformers\LessonTransformer;
+use App\Exceptions\ApplicationException;
 use App\Models\Lesson;
 use App\Repositories\LessonRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LessonController extends BaseController
 {
@@ -19,11 +21,6 @@ class LessonController extends BaseController
 
     protected $lessonRepository;
 
-    /**
-     * LessonController constructor.
-     * @param LessonTransformer $lessonTransformer
-     * @param LessonRepository $lessonRepository
-     */
     public function __construct(LessonTransformer $lessonTransformer, LessonRepository $lessonRepository)
     {
         $this->lessonTransformer = $lessonTransformer;
@@ -33,47 +30,32 @@ class LessonController extends BaseController
     public function index()
     {
         $lessons = $this->lessonRepository->getAll();
-//        return $this->collection($lessons, $this->lessonTransformer);
-        return $this->responseData([
-            'data' => $this->lessonTransformer->collection($lessons->toArray())
-        ]);
+        return $this->responseData($this->lessonTransformer->collection($lessons->toArray()));
     }
 
     public function show($id)
     {
         $lesson = $this->lessonRepository->getOne($id);
         if (!$lesson) {
-//            return $this->response->errorNotFound('Lesson not found');
-            return $this->setCode(404)->responseData();
+            throw new ApplicationException(40800);
         }
-//        return $this->item($lesson, $this->lessonTransformer);
-        return $this->responseData([
-//            'user' => $this->user(),
-            'data' => $this->lessonTransformer->transform($lesson)
-        ]);
+        return $this->responseData($this->lessonTransformer->transform($lesson));
     }
 
     public function store(Request $request)
     {
-//        $meta = $request->get('meta');
-//        $foo = $meta['foo'];
-//        return $this->setCode(201)->responseData([
-//            'status' => 'success',
-//            'data' => $foo
-//        ]);
         if (!$request->get('title') or !$request->get('body')) {
             $options = [
-                'foo' => 'bar',
-                'test' => 'one'
+                'time' => 3,
+                'min' => 5
             ];
-            return $this->setCode(422)->responseData([], $options);
+            return $this->setCode(40000)->responseError(1, $options);
         }
         Lesson::create($request->all());
         return $this->responseData([
-            'data' => [
-                'status' => 'success',
-                'message' => 'lesson created'
-            ]
+            'status' => 'success',
+            'message' => 'lesson created',
+            'user' => Auth::user()
         ]);
     }
 }
