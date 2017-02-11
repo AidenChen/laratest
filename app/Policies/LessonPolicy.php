@@ -22,6 +22,6 @@ class LessonPolicy
 
     public function delete(User $user, Lesson $lesson)
     {
-        return $user->id == $lesson->user_id;
+        return $user->id === $lesson->user_id;
     }
 }

@@ -42,6 +42,11 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['user_password', 'remember_token'];
 
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
     public function getAuthPassword()
     {
         return $this->user_password;

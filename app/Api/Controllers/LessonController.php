@@ -51,7 +51,8 @@ class LessonController extends BaseController
             ];
             return $this->setCode(40000)->responseError(1, $options);
         }
-        $lesson = Lesson::create($request->all());
+        $lesson = $request->user()->lessons()->create($request->all());
+//        $lesson = Lesson::create($request->all());
         if (!$lesson) {
             throw new ApplicationException(50101);
         }
