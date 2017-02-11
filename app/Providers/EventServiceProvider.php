@@ -5,8 +5,8 @@ namespace App\Providers;
 use Event;
 use Gate;
 use App\Exceptions\ApplicationException;
-use App\Models\Lesson;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -32,8 +32,8 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        Event::listen('eloquent.deleting: *', function (Lesson $lesson) {
-            if (Gate::denies('delete', $lesson)) {
+        Event::listen('eloquent.deleting: *', function (Model $model) {
+            if (Gate::denies('delete', $model)) {
                 throw new ApplicationException(41200);
             }
         });
