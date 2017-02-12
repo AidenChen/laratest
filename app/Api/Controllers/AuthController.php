@@ -9,7 +9,7 @@
 namespace App\Api\Controllers;
 
 use App\Exceptions\ApplicationException;
-use App\models\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
