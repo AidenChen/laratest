@@ -60,11 +60,11 @@ class ErrorInfoService implements ErrorInfoContract
     ];
 
     private $notifyCn = [
-        1 => '已尝试 :time 次，将在 :min 分钟后解锁！'
+        'test.word' => '已尝试 :time 次，将在 :min 分钟后解锁！'
     ];
 
     private $notifyEn = [
-        1 => 'yi chang shi :time ci, jiang zai :min fen zhong hou jie suo!'
+        'test.word' => 'yi chang shi :time ci, jiang zai :min fen zhong hou jie suo!'
     ];
 
     public function getErrorMsg($code, $lang = 'cn')
@@ -85,7 +85,7 @@ class ErrorInfoService implements ErrorInfoContract
         }
 
         switch ($type) {
-            case 1:
+            case 'test.word':
                 $notify = str_replace(':time',$options['time'],$notify);
                 $notify = str_replace(':min',$options['min'],$notify);
                 break;

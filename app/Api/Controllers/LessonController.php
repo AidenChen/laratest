@@ -53,7 +53,7 @@ class LessonController extends BaseController
                 'time' => 3,
                 'min' => 5
             ];
-            return $this->setCode(40000)->responseError(1, $options);
+            return $this->setCode(40000)->responseError('test.word', $options);
         }
         $lesson = $request->user()->lessons()->create($request->all());
 //        $lesson = Lesson::create($request->all());

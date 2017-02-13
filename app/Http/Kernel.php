@@ -12,11 +12,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \App\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+//        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+//        \App\Http\Middleware\EncryptCookies::class,
+//        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+//        \Illuminate\Session\Middleware\StartSession::class,
+//        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
 //        \App\Http\Middleware\VerifyCsrfToken::class,
     ];
 
@@ -31,7 +31,6 @@ class Kernel extends HttpKernel
         'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
         'jwt.api.auth' => \App\Http\Middleware\GetUserFromToken::class,
         'init.request' => \App\Http\Middleware\InitRequest::class,
-//        'error.info' => \App\Http\Middleware\GetErrorInfo::class,
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
