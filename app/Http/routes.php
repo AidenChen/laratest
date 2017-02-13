@@ -14,6 +14,7 @@
 Route::group(['middleware' => 'init.request', 'prefix' => 'api/t'], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'web'], function () {
+            Route::post('user/refresh', 'AuthController@refresh');
             Route::post('user/login', 'AuthController@authenticate');
             Route::post('user/signup', 'AuthController@signup');
             Route::group(['middleware' => 'jwt.api.auth'], function () {

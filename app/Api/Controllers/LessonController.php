@@ -39,7 +39,11 @@ class LessonController extends BaseController
         if (!$lesson) {
             throw new ApplicationException(40800);
         }
-        return $this->responseData($this->lessonTransformer->transform($lesson));
+        return $this->responseData([
+            // 测试用字段
+            'user' => $request->user(),
+            'lesson' => $this->lessonTransformer->transform($lesson)
+        ]);
     }
 
     public function create(Request $request)
